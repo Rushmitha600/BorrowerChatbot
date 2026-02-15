@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoanFAQ - Your Loan Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- AI ASSISTANT PAGE -->
+    <div class="ai-page" id="aiPage">
+        <!-- Minimize Arrow -->
+        <button class="minimize-arrow" onclick="minimizeAI()">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+
+        <div class="ai-content">
+            <!-- Left Side - AI Avatar -->
+            <div class="ai-left">
+                <div class="ai-avatar-large">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="ai-name-large">Finova</div>
+            </div>
+
+            <!-- Right Side - Chat Area -->
+            <div class="ai-right">
+                <div class="chat-card">
+                    <div class="chat-card-header">
+                        <i class="fas fa-circle" style="color: #10b981; font-size: 10px;"></i>
+                        <span>Ask Finova</span>
+                    </div>
+
+                    <!-- Chat Messages Area -->
+                    <div class="chat-messages-area" id="chatMessages"></div>
+
+                    <!-- Chat Input Area -->
+                    <div class="chat-input-section">
+                        <input type="text" id="chatInput" placeholder="Type your message here..." class="chat-text-input">
+                        <button class="chat-send-btn" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MINIMIZED AI BUTTON -->
+    <div class="minimized-ai hidden" id="minimizedAI" onclick="maximizeAI()">
+        <i class="fas fa-robot"></i>
+        <span>Ask Finova</span>
+        <i class="fas fa-chevron-left"></i>
+    </div>
+
+    <!-- MAIN FAQ PAGE -->
+    <div class="faq-container" id="faqContainer">
+        <!-- Header with Icons -->
+        <div class="faq-header">
+            <div class="logo">
+                <i class="fas fa-hand-holding-usd"></i>
+                <span>LoanFAQ</span>
+            </div>
+            <div class="nav-icons">
+                <button class="nav-icon" onclick="navigateTo('emi')" title="EMI Calculator">
+                    <i class="fas fa-calculator"></i>
+                </button>
+                <button class="nav-icon" onclick="navigateTo('eligibility')" title="Check Eligibility">
+                    <i class="fas fa-check-circle"></i>
+                </button>
+                <button class="nav-icon mode-toggle" id="modeToggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <h1>How can we help you?</h1>
+            <p>Search our FAQ database for answers about loans</p>
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" placeholder="Search for questions..." autocomplete="off">
+                <button id="searchButton" onclick="searchFAQ()">
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Popular Topics -->
+        <div class="popular-topics">
+            <h3>Popular Topics</h3>
+            <div class="topic-grid">
+                <div class="topic-card" onclick="navigateTo('emi')">
+                    <i class="fas fa-percent"></i>
+                    <span>Interest Rates</span>
+                </div>
+                <div class="topic-card" onclick="navigateTo('eligibility')">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Eligibility</span>
+                </div>
+                <div class="topic-card" onclick="quickSearch('documents required')">
+                    <i class="fas fa-file-alt"></i>
+                    <span>Documents</span>
+                </div>
+                <div class="topic-card" onclick="quickSearch('repayment options')">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Repayment</span>
+                </div>
+                <div class="topic-card" onclick="quickSearch('prepayment charges')">
+                    <i class="fas fa-clock"></i>
+                    <span>Prepayment</span>
+                </div>
+                <div class="topic-card" onclick="quickSearch('credit score')">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Credit Score</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Results Section -->
+        <div class="faq-results" id="faqResults"></div>
+    </div>
+
+    <!-- EMI CALCULATOR PAGE -->
+    <div class="calculator-page hidden" id="emiPage">
+        <div class="calculator-header">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> Back to FAQ
+            </button>
+            <h2><i class="fas fa-calculator"></i> EMI Calculator</h2>
+            <button class="select-loan-btn" onclick="showLoanSelection()">
+                <i class="fas fa-hand-holding-usd"></i> Select Loan
+            </button>
+        </div>
+        
+        <div class="calculator-content">
+            <div class="input-group">
+                <label for="emiLoanAmount">Loan Amount (₹)</label>
+                <input type="number" id="emiLoanAmount" value="500000">
+            </div>
+            <div class="input-group">
+                <label for="emiInterestRate">Interest Rate (%)</label>
+                <input type="number" id="emiInterestRate" value="10.5" step="0.1">
+            </div>
+            <div class="input-group">
+                <label for="emiTenure">Tenure (Years)</label>
+                <input type="number" id="emiTenure" value="5">
+            </div>
+            <div class="input-group">
+                <label for="emiCreditScore">Credit Score</label>
+                <input type="number" id="emiCreditScore" placeholder="Enter credit score (300-900)" min="300" max="900" value="750">
+            </div>
+            <button class="calculate-btn" onclick="calculateEMI()">
+                <i class="fas fa-calculator"></i> Calculate EMI
+            </button>
+            <div id="emiResult" class="result-card hidden">
+                <h3>Your Monthly EMI</h3>
+                <div class="result-amount" id="emiAmount">₹0</div>
+                <div class="result-details">
+                    <p>Total Interest: <span id="totalInterest">₹0</span></p>
+                    <p>Total Payment: <span id="totalPayment">₹0</span></p>
+                </div>
+            </div>
+            <div class="missed-payment-section">
+                <h4><i class="fas fa-exclamation-triangle"></i> Missed EMI Payment?</h4>
+                <div class="missed-payment-inputs">
+                    <div class="input-group-small">
+                        <label for="missedMonths">Months Missed</label>
+                        <select id="missedMonths">
+                            <option value="1">1 Month</option>
+                            <option value="2">2 Months</option>
+                            <option value="3">3 Months</option>
+                        </select>
+                    </div>
+                    <button class="calculate-missed-btn" onclick="calculateMissedPayment()">
+                        <i class="fas fa-calculator"></i> Calculate
+                    </button>
+                </div>
+                <div id="missedPaymentResult" class="missed-payment-result hidden">
+                    <p>Next Month Payment: <strong id="nextMonthAmount">₹0</strong></p>
+                    <small>Includes original EMI + 2% penalty per month</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOAN SELECTION PAGE -->
+    <div class="calculator-page hidden" id="loanSelectionPage">
+        <div class="calculator-header">
+            <button class="back-btn" onclick="hideLoanSelection()">
+                <i class="fas fa-arrow-left"></i> Back to Calculator
+            </button>
+            <h2><i class="fas fa-hand-holding-usd"></i> Select Loan Type</h2>
+        </div>
+        
+        <div class="loan-selection-container">
+            <div class="loan-option-card" onclick="selectLoanAndCalculate('personal')">
+                <i class="fas fa-user"></i>
+                <div class="loan-info">
+                    <h4>Personal Loan</h4>
+                    <p class="loan-rate">10.5% p.a.</p>
+                    <small>₹10,000 - ₹25,00,000</small>
+                </div>
+            </div>
+            <div class="loan-option-card" onclick="selectLoanAndCalculate('home')">
+                <i class="fas fa-home"></i>
+                <div class="loan-info">
+                    <h4>Home Loan</h4>
+                    <p class="loan-rate">8.5% p.a.</p>
+                    <small>₹5,00,000 - ₹1,00,00,000</small>
+                </div>
+            </div>
+            <div class="loan-option-card" onclick="selectLoanAndCalculate('car')">
+                <i class="fas fa-car"></i>
+                <div class="loan-info">
+                    <h4>Car Loan</h4>
+                    <p class="loan-rate">9.5% p.a.</p>
+                    <small>₹1,00,000 - ₹50,00,000</small>
+                </div>
+            </div>
+            <div class="loan-option-card" onclick="selectLoanAndCalculate('education')">
+                <i class="fas fa-graduation-cap"></i>
+                <div class="loan-info">
+                    <h4>Education Loan</h4>
+                    <p class="loan-rate">11% p.a.</p>
+                    <small>₹50,000 - ₹50,00,000</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ELIGIBILITY CHECKER PAGE -->
+    <div class="calculator-page hidden" id="eligibilityPage">
+        <div class="calculator-header">
+            <button class="back-btn" onclick="goBack()">
+                <i class="fas fa-arrow-left"></i> Back to FAQ
+            </button>
+            <h2><i class="fas fa-check-circle"></i> Eligibility Checker</h2>
+        </div>
+        
+        <div class="eligibility-form-container">
+            <div class="input-group">
+                <label for="eligibilityIncome">Monthly Income (₹)</label>
+                <input type="number" id="eligibilityIncome" value="50000">
+            </div>
+            <div class="input-group">
+                <label for="eligibilityAge">Age</label>
+                <input type="number" id="eligibilityAge" value="30">
+            </div>
+            <div class="input-group">
+                <label for="eligibilityCreditScore">Credit Score</label>
+                <input type="number" id="eligibilityCreditScore" placeholder="Enter credit score (300-900)" min="300" max="900" value="750">
+            </div>
+            <div class="input-group">
+                <label for="eligibilityExistingEmi">Existing EMI (₹)</label>
+                <input type="number" id="eligibilityExistingEmi" value="0">
+            </div>
+            <button class="calculate-btn" onclick="checkEligibility()">
+                <i class="fas fa-search"></i> Check Eligibility
+            </button>
+            <div id="eligibilityResult" class="eligibility-result-below"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
